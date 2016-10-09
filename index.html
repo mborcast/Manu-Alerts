@@ -24,15 +24,15 @@
 	<script src="sweetalert.min.js"></script> 
 	<script src="manualerts.js"></script>
 	<script>
-		foo();
-		function foo()
+		function testswal()
 		{
 			swal({   title: "Error!",   text: "Here's my error message!",   type: "error",   confirmButtonText: "Cool" });
 		}
 		function show()
 		{
 			new manuAlert({
-			    content: document.getElementById('jal'),
+			    title: "Hello!",
+			    text: "I am a Manu Alert!",
 			    allowOutsideClick: true,
 			    maxWidth: 600,
 			    autoOpen: true

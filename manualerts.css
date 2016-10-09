@@ -29,7 +29,7 @@ body.stop-scrolling {
   left: 50%;
   top: 50%;
   margin-left: -256px;
-  margin-top: -200px;
+  margin-top: -168px;
   overflow: hidden;
   display: none;
   z-index: 99999; 
@@ -41,14 +41,6 @@ body.stop-scrolling {
   margin-right: 0;
   left: 15px;
   right: 15px; } 
-}
-.manu-alert.manu-opened.manu-anchored{
-    top: 20px;
-    -webkit-transform: translate(-50%, 0);
-       -moz-transform: translate(-50%, 0);
-        -ms-transform: translate(-50%, 0);
-         -o-transform: translate(-50%, 0);
-            transform: translate(-50%, 0);
 }
 /* Close Button */
 .manu-close{
@@ -99,7 +91,6 @@ body.stop-scrolling {
           animation: popOut 0.5s;
 }
 .manu-alert.fade-and-pop.manu-opened{
-  top: 50%;
   -webkit-animation: popIn 0.3s;
           animation: popIn 0.3s;
 }

@@ -6,8 +6,10 @@
   {
     // Create global element references
     this.closeButton = null;
-    this.modal = null;
-    this.overlay = null;
+    this.alertModal = null;
+    this.title = null;
+    this.text = null;
+    this.alertOverlay = null;
     this.body = null;
 
     // Determine proper prefix
@@ -20,10 +22,10 @@
       allowOutsideClick: false,
       className: 'fade-and-pop',
       closeButton: true,
-      content: "",
       maxWidth: 600,
       minWidth: 280,
-      overlay: true
+      text: "",
+      title: ""
     }
 
     // Create options by extending defaults with the passed in arugments
@@ -40,28 +42,28 @@
   {
     var _ = this;
 
-    this.modal.className   = this.modal.className.replace(" manu-opened", "");
-    this.overlay.className = this.overlay.className.replace(" manu-opened", "");
+    this.alertModal.className   = this.alertModal.className.replace(" manu-opened", "");
+    this.alertOverlay.className = this.alertOverlay.className.replace(" manu-opened", "");
     this.body.className = "";
 
     setTimeout(function() 
     {
-        _.modal.parentNode.removeChild(_.modal);
-        _.overlay.parentNode.removeChild(_.overlay);
+        _.alertModal.parentNode.removeChild(_.alertModal);
+        _.alertOverlay.parentNode.removeChild(_.alertOverlay);
     }, 450);
-
   }
+
   manuAlert.prototype.open = function() 
   {
     mpBuildOut.call(this);
 
     mpInitializeEvents.call(this);
 
-    window.getComputedStyle(this.modal);
+    window.getComputedStyle(this.alertModal);
 
-    this.modal.className = this.modal.className + (this.modal.offsetHeight > window.innerHeight ? " manu-opened manu-anchored" : " manu-opened");
+    this.alertModal.className = this.alertModal.className + (this.alertModal.offsetHeight > window.innerHeight ? " manu-opened manu-anchored" : " manu-opened");
 
-    this.overlay.className = this.overlay.className + " manu-opened";
+    this.alertOverlay.className = this.alertOverlay.className + " manu-opened";
 
     this.body.className = "stop-scrolling";
   }
@@ -69,63 +71,76 @@
   // Private Methods
   function mpBuildOut() 
   {
-    var lContent, 
-        lContentHolder, 
+    var lContentHolder, 
         lDocumentFrag;
-    /*
-     * If content is an HTML string, append the HTML string.
-     * If content is a domNode, append its content.
-     */
 
     this.body = document.body;
-
-    if (typeof this.options.content === "string") 
-    {
-      lContent = this.options.content;
-    } 
-    else 
-    {
-      lContent = this.options.content.innerHTML;
-    }
 
     // Create a DocumentFragment to build with
     lDocumentFrag = document.createDocumentFragment();
 
-    // Create modal element
-    this.modal = document.createElement("div");
-    this.modal.className = "manu-alert " + this.options.className;
-    this.modal.style.minWidth = this.options.minWidth + "px";
-    this.modal.style.maxWidth = this.options.maxWidth + "px";
+    // Create alert modal div
+    this.alertModal = document.createElement("div");
 
-    // If closeButton option is true, add a close button
+    this.alertModal.className = "manu-alert " + this.options.className;
+    this.alertModal.style.minWidth = this.options.minWidth + "px";
+    this.alertModal.style.maxWidth = this.options.maxWidth + "px";
+
+    // Create overlay div
+    this.alertOverlay = document.createElement("div");
+    this.alertOverlay.className = "manu-overlay " + this.options.className;
+
+    lDocumentFrag.appendChild(this.alertOverlay);
+
+    // Create closeButton
     if (this.options.closeButton === true) 
     {
       this.closeButton = document.createElement("button");
       this.closeButton.className = "manu-close";
       this.closeButton.innerHTML = "&times;";
-      this.modal.appendChild(this.closeButton);
+
+      this.alertModal.appendChild(this.closeButton);
     }
 
-    // If overlay is true, add one
-    if (this.options.overlay === true) 
-    {
-      this.overlay = document.createElement("div");
-      this.overlay.className = "manu-overlay " + this.options.className;
-      lDocumentFrag.appendChild(this.overlay);
-    }
-
-    // Create content area and append to modal
+    // Create content area
     lContentHolder = document.createElement("div");
     lContentHolder.className = "manu-content";
-    lContentHolder.innerHTML = lContent;
-    this.modal.appendChild(lContentHolder);
+
+    if (this.options.title)
+    {
+      this.title = document.createElement("h2");
+
+      this.title.className = "manu-title";
+      this.title.innerHTML = mfEscapeHtml(this.options.title);
+
+      lContentHolder.appendChild(this.title);
+    }
+
+    if (this.options.text)
+    {
+      this.text = document.createElement("p");
+
+      this.text.className = "manu-text";
+      this.text.innerHTML = mfEscapeHtml(this.options.text);
+
+      lContentHolder.appendChild(this.text);
+    }
+
+    this.alertModal.appendChild(lContentHolder);
 
     // Append modal to DocumentFragment
-    lDocumentFrag.appendChild(this.modal);
+    lDocumentFrag.appendChild(this.alertModal);
 
     // Append DocumentFragment to body
     document.body.appendChild(lDocumentFrag);
   }
+
+  function mfEscapeHtml(pString) 
+  {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(pString));
+    return div.innerHTML;
+  };
   function mfExtendDefaults(source, properties) 
   {
     var property;
@@ -145,11 +160,11 @@
       this.closeButton.addEventListener('click', this.close.bind(this));
     }
 
-    if (this.overlay) 
+    if (this.alertOverlay) 
     {
       if (this.options.allowOutsideClick === true) 
       {
-        this.overlay.addEventListener('click', this.close.bind(this));
+        this.alertOverlay.addEventListener('click', this.close.bind(this));
       }
     }
   }
