@@ -18,7 +18,6 @@
     // Define option defaults 
     var defaults = 
     {
-      autoOpen: false,
       allowOutsideClick: false,
       className: 'fade-and-pop',
       closeButton: true,
@@ -32,9 +31,7 @@
     if (arguments[0] && typeof arguments[0] === "object") 
       this.options = mfExtendDefaults(defaults, arguments[0]);
 
-    if(this.options.autoOpen === true) 
       this.open();
-
   }
 
   // Public Methods
